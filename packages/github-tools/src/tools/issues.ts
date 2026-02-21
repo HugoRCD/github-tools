@@ -1,0 +1,139 @@
+import { tool } from 'ai'
+import { z } from 'zod'
+import type { Octokit } from '../client.js'
+
+type ToolOptions = { needsApproval?: boolean }
+
+export const listIssues = (octokit: Octokit) =>
+  tool({
+    description: 'List issues for a GitHub repository (excludes pull requests)',
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      state: z.enum(['open', 'closed', 'all']).optional().default('open').describe('Filter by state'),
+      labels: z.string().optional().describe('Comma-separated list of label names to filter by'),
+      perPage: z.number().optional().default(30).describe('Number of results to return (max 100)'),
+    }),
+    execute: async ({ owner, repo, state, labels, perPage }) => {
+      const { data } = await octokit.issues.listForRepo({
+        owner,
+        repo,
+        state,
+        labels,
+        per_page: perPage,
+      })
+      return data
+        .filter(issue => !issue.pull_request)
+        .map(issue => ({
+          number: issue.number,
+          title: issue.title,
+          state: issue.state,
+          url: issue.html_url,
+          author: issue.user?.login,
+          labels: issue.labels.map(l => (typeof l === 'string' ? l : l.name)),
+          createdAt: issue.created_at,
+          updatedAt: issue.updated_at,
+        }))
+    },
+  })
+
+export const getIssue = (octokit: Octokit) =>
+  tool({
+    description: 'Get detailed information about a specific issue',
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      issueNumber: z.number().describe('Issue number'),
+    }),
+    execute: async ({ owner, repo, issueNumber }) => {
+      const { data } = await octokit.issues.get({ owner, repo, issue_number: issueNumber })
+      return {
+        number: data.number,
+        title: data.title,
+        body: data.body,
+        state: data.state,
+        url: data.html_url,
+        author: data.user?.login,
+        assignees: data.assignees?.map(a => a.login),
+        labels: data.labels.map(l => (typeof l === 'string' ? l : l.name)),
+        comments: data.comments,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+        closedAt: data.closed_at,
+      }
+    },
+  })
+
+export const createIssue = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Create a new issue in a GitHub repository',
+    needsApproval,
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      title: z.string().describe('Issue title'),
+      body: z.string().optional().describe('Issue description (supports Markdown)'),
+      labels: z.array(z.string()).optional().describe('Labels to apply to the issue'),
+      assignees: z.array(z.string()).optional().describe('GitHub usernames to assign to the issue'),
+    }),
+    execute: async ({ owner, repo, title, body, labels, assignees }) => {
+      const { data } = await octokit.issues.create({ owner, repo, title, body, labels, assignees })
+      return {
+        number: data.number,
+        title: data.title,
+        url: data.html_url,
+        state: data.state,
+        labels: data.labels.map(l => (typeof l === 'string' ? l : l.name)),
+      }
+    },
+  })
+
+export const addIssueComment = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Add a comment to a GitHub issue',
+    needsApproval,
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      issueNumber: z.number().describe('Issue number'),
+      body: z.string().describe('Comment text (supports Markdown)'),
+    }),
+    execute: async ({ owner, repo, issueNumber, body }) => {
+      const { data } = await octokit.issues.createComment({ owner, repo, issue_number: issueNumber, body })
+      return {
+        id: data.id,
+        url: data.html_url,
+        body: data.body,
+        author: data.user?.login,
+        createdAt: data.created_at,
+      }
+    },
+  })
+
+export const closeIssue = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Close an open GitHub issue',
+    needsApproval,
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      issueNumber: z.number().describe('Issue number to close'),
+      stateReason: z.enum(['completed', 'not_planned']).optional().default('completed').describe('Reason for closing'),
+    }),
+    execute: async ({ owner, repo, issueNumber, stateReason }) => {
+      const { data } = await octokit.issues.update({
+        owner,
+        repo,
+        issue_number: issueNumber,
+        state: 'closed',
+        state_reason: stateReason,
+      })
+      return {
+        number: data.number,
+        title: data.title,
+        state: data.state,
+        url: data.html_url,
+        closedAt: data.closed_at,
+      }
+    },
+  })

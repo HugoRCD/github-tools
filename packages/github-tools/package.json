@@ -1,0 +1,49 @@
+{
+  "name": "@github-tools/sdk",
+  "version": "0.0.1",
+  "description": "GitHub tools for the Vercel AI SDK — wrap GitHub's API as AI SDK v6 tools ready to plug into any agent",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "ai",
+    "ai-sdk",
+    "github",
+    "tools",
+    "agent"
+  ],
+  "author": "HugoRCD",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^21.1.1"
+  },
+  "peerDependencies": {
+    "ai": "^6.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,47 @@
+import type { UIToolInvocation, Tool } from 'ai'
+
+export type GithubToolName = 'getRepository' | 'listBranches' | 'getFileContent' | 'createOrUpdateFile' | 'listPullRequests' | 'getPullRequest' | 'createPullRequest' | 'mergePullRequest' | 'addPullRequestComment' | 'listIssues' | 'getIssue' | 'createIssue' | 'addIssueComment' | 'closeIssue' | 'searchCode' | 'searchRepositories' | 'listCommits' | 'getCommit'
+
+export type GithubToolMeta = {
+  title: string // card header: "Create Issue"
+  label: string // done: "Issue created"
+  labelActive: string // running: "Creating issue"
+  icon: string
+}
+
+export const GITHUB_TOOL_META: Record<GithubToolName, GithubToolMeta> = {
+  getRepository: { title: 'Get Repository', label: 'Repository fetched', labelActive: 'Fetching repository', icon: 'i-simple-icons-github' },
+  listBranches: { title: 'List Branches', label: 'Branches listed', labelActive: 'Listing branches', icon: 'i-lucide-git-branch' },
+  getFileContent: { title: 'Get File Content', label: 'File read', labelActive: 'Reading file', icon: 'i-lucide-file-code' },
+  createOrUpdateFile: { title: 'Create / Update File', label: 'File updated', labelActive: 'Updating file', icon: 'i-lucide-file-pen' },
+  listPullRequests: { title: 'List Pull Requests', label: 'Pull requests listed', labelActive: 'Listing pull requests', icon: 'i-lucide-git-pull-request' },
+  getPullRequest: { title: 'Get Pull Request', label: 'Pull request fetched', labelActive: 'Fetching pull request', icon: 'i-lucide-git-pull-request' },
+  createPullRequest: { title: 'Create Pull Request', label: 'Pull request created', labelActive: 'Creating pull request', icon: 'i-lucide-git-pull-request-arrow' },
+  mergePullRequest: { title: 'Merge Pull Request', label: 'Pull request merged', labelActive: 'Merging pull request', icon: 'i-lucide-git-merge' },
+  addPullRequestComment: { title: 'Comment on PR', label: 'Comment posted', labelActive: 'Posting PR comment', icon: 'i-lucide-message-square-plus' },
+  listIssues: { title: 'List Issues', label: 'Issues listed', labelActive: 'Listing issues', icon: 'i-lucide-circle-dot' },
+  getIssue: { title: 'Get Issue', label: 'Issue fetched', labelActive: 'Fetching issue', icon: 'i-lucide-circle-dot' },
+  createIssue: { title: 'Create Issue', label: 'Issue created', labelActive: 'Creating issue', icon: 'i-lucide-circle-plus' },
+  addIssueComment: { title: 'Comment on Issue', label: 'Comment posted', labelActive: 'Posting issue comment', icon: 'i-lucide-message-square-plus' },
+  closeIssue: { title: 'Close Issue', label: 'Issue closed', labelActive: 'Closing issue', icon: 'i-lucide-circle-check' },
+  searchCode: { title: 'Search Code', label: 'Code searched', labelActive: 'Searching code', icon: 'i-lucide-search-code' },
+  searchRepositories: { title: 'Search Repositories', label: 'Repositories searched', labelActive: 'Searching repositories', icon: 'i-lucide-search' },
+  listCommits: { title: 'List Commits', label: 'Commits listed', labelActive: 'Listing commits', icon: 'i-lucide-git-commit-horizontal' },
+  getCommit: { title: 'Get Commit', label: 'Commit fetched', labelActive: 'Fetching commit', icon: 'i-lucide-git-commit-horizontal' },
+}
+
+export const GITHUB_TOOL_NAMES = new Set<string>(Object.keys(GITHUB_TOOL_META))
+
+export const GITHUB_WRITE_TOOLS = new Set<GithubToolName>([
+  'createOrUpdateFile',
+  'createPullRequest',
+  'mergePullRequest',
+  'addPullRequestComment',
+  'createIssue',
+  'addIssueComment',
+  'closeIssue'
+])
+
+export type GithubUIToolInvocation = {
+  type: `tool-${GithubToolName}`
+} & UIToolInvocation<Tool>

@@ -1,0 +1,16 @@
+@import "tailwindcss" theme(static);
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: 'Public Sans', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-neutral-50 dark:bg-neutral-950;
+  }
+}
+
+:root {
+  --ui-container: var(--container-3xl);
+}

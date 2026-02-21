@@ -23,5 +23,7 @@ logs
 .env.*
 !.env.example
 
-apps/chat/.data
-.turbo/
+# VSC
+.history
+.vercel
+.env*.local
