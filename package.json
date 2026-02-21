@@ -1,0 +1,50 @@
+{
+  "name": "default-repository",
+  "private": true,
+  "type": "module",
+  "description": "default repository for HugoRCD",
+  "author": "HugoRCD",
+  "funding": "https://github.com/sponsors/HugoRCD",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoRCD/default-repository.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HugoRCD/default-repository/issues"
+  },
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "automd": "automd",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@nuxt/image": "2.0.0",
+    "@nuxt/scripts": "0.13.2",
+    "@nuxt/ui": "^4.4.0",
+    "@unhead/vue": "^2.1.4",
+    "@vueuse/core": "^14.2.1",
+    "@vueuse/nuxt": "14.2.1",
+    "motion-v": "^1.10.3",
+    "nuxt": "^4.3.1",
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "@hrcd/eslint-config": "^3.0.3",
+    "@shelve/cli": "^4.1.7",
+    "automd": "^0.4.3",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@10.29.3"
+}
