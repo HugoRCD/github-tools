@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ui-container: 96rem;
+
+  --color-primary-50: oklch(0.97 0.03 162);
+  --color-primary-100: oklch(0.93 0.05 162);
+  --color-primary-200: oklch(0.88 0.08 162);
+  --color-primary-300: oklch(0.81 0.12 162);
+  --color-primary-400: oklch(0.73 0.16 162);
+  --color-primary-500: oklch(0.65 0.18 162);
+  --color-primary-600: oklch(0.56 0.15 162);
+  --color-primary-700: oklch(0.46 0.12 162);
+  --color-primary-800: oklch(0.37 0.09 162);
+  --color-primary-900: oklch(0.29 0.07 162);
+}
+
+:root {
+  --ui-bg: oklch(0.15 0.01 255);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--ui-bg);
+}
