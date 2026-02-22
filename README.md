@@ -34,9 +34,42 @@ const result = await generateText({
 })
 ```
 
+### Presets
+
+Use `preset` to get only the tools relevant to a specific use case:
+
+```ts
+// Code-review agent — PRs, commits, file content, and comments
+createGithubTools({ token, preset: 'code-review' })
+
+// Issue triage — read/create/close issues, search
+createGithubTools({ token, preset: 'issue-triage' })
+
+// Read-only exploration — browse repos without write access
+createGithubTools({ token, preset: 'repo-explorer' })
+
+// Full maintenance — all tools
+createGithubTools({ token, preset: 'maintainer' })
+```
+
+Presets are composable — pass an array to combine them:
+
+```ts
+createGithubTools({ token, preset: ['code-review', 'issue-triage'] })
+```
+
+| Preset | Tools included |
+|---|---|
+| `code-review` | `getPullRequest`, `listPullRequests`, `getFileContent`, `listCommits`, `getCommit`, `getRepository`, `listBranches`, `searchCode`, `addPullRequestComment` |
+| `issue-triage` | `listIssues`, `getIssue`, `createIssue`, `addIssueComment`, `closeIssue`, `getRepository`, `searchRepositories`, `searchCode` |
+| `repo-explorer` | All read-only tools (no write operations) |
+| `maintainer` | All 18 tools |
+
+Omit `preset` to get all tools (same as `maintainer`).
+
 ### Cherry-Picking Tools
 
-You can import individual tool factories instead of the full set:
+You can also import individual tool factories for full control:
 
 ```ts
 import { createOctokit, listPullRequests, createIssue } from '@github-tools/sdk'
@@ -155,13 +188,16 @@ Search tools (`searchCode`, `searchRepositories`) work with any token.
 
 ### `createGithubTools(options)`
 
-Returns an object of all 18 tools, ready to spread into `tools` of any AI SDK call.
+Returns an object of tools, ready to spread into `tools` of any AI SDK call.
 
 ```ts
 type GithubToolsOptions = {
   token: string
   requireApproval?: boolean | Partial<Record<GithubWriteToolName, boolean>>
+  preset?: GithubToolPreset | GithubToolPreset[]
 }
+
+type GithubToolPreset = 'code-review' | 'issue-triage' | 'repo-explorer' | 'maintainer'
 ```
 
 ### `createOctokit(token)`
