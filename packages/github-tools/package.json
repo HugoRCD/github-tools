@@ -1,7 +1,7 @@
 {
   "name": "@github-tools/sdk",
   "version": "0.0.1",
-  "description": "GitHub tools for the Vercel AI SDK — wrap GitHub's API as AI SDK v6 tools ready to plug into any agent",
+  "description": "GitHub tools for the Vercel AI SDK, wrap GitHub's API as AI SDK tools ready to plug into any agent",
   "author": "HugoRCD <hugo.richard@vercel.com",
   "repository": {
     "type": "git",
