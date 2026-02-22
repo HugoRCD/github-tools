@@ -5,4 +5,12 @@ export default defineNuxtConfig({
     preference: 'dark',
     fallback: 'dark',
   },
+  icon: {
+    customCollections: [
+      {
+        prefix: 'custom',
+        dir: './app/assets/icons',
+      },
+    ],
+  },
 })

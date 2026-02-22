@@ -14,6 +14,9 @@ export default defineAppConfig({
     rootDir: 'apps/docs',
   },
   assistant: {
+    icons: {
+      trigger: 'i-custom:ai',
+    },
     faqQuestions: [
       {
         category: 'Tools',
@@ -51,7 +54,7 @@ export default defineAppConfig({
   },
   ui: {
     colors: {
-      primary: 'emerald',
+      primary: 'neutral',
       neutral: 'zinc',
     },
     prose: {

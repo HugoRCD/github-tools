@@ -14,7 +14,7 @@ const layers = [
     title: 'Tools',
     description: '18 AI-callable GitHub operations — repositories, pull requests, issues, commits, and code search.',
     to: '/api/tools-catalog',
-    icon: 'i-lucide-wrench',
+    icon: 'i-custom:sdk',
   },
   {
     title: 'Presets',
@@ -26,7 +26,7 @@ const layers = [
     title: 'Agents',
     description: 'Pre-configured agents with tools, presets, and system instructions ready to use.',
     to: '/guide/examples',
-    icon: 'i-lucide-bot',
+    icon: 'i-custom:bot',
   },
 ]
 
@@ -41,7 +41,7 @@ const guides = [
     title: 'Control Write Safety',
     description: 'Gate dangerous operations with approval policies.',
     to: '/guide/approval-control',
-    icon: 'i-lucide-shield-check',
+    icon: 'i-custom:shield',
   },
   {
     title: 'Configure Token Scopes',
@@ -53,7 +53,7 @@ const guides = [
     title: 'Examples',
     description: 'Complete scripts you can copy and adapt.',
     to: '/guide/examples',
-    icon: 'i-lucide-code',
+    icon: 'i-custom:terminal',
   },
 ]
 
@@ -98,9 +98,9 @@ const quickAccess = [
             v-for="item in layers"
             :key="item.title"
             :to="item.to"
-            class="group flex min-h-48 flex-col justify-between rounded-xl border border-default/60 bg-elevated/30 p-5 transition hover:-translate-y-0.5 hover:border-primary/35 hover:bg-elevated/80"
+            class="group flex min-h-48 flex-col justify-between rounded-xl border border-default/60 bg-elevated/30 p-5 transition hover:-translate-y-0.5 hover:border-default hover:bg-elevated/80"
           >
-            <UIcon :name="item.icon" class="size-5 text-toned transition group-hover:text-primary/90" />
+            <UIcon :name="item.icon" class="size-5 text-toned transition group-hover:text-highlighted" />
             <div class="space-y-2">
               <p class="text-base/7 font-semibold">{{ item.title }}</p>
               <p class="text-sm/6 text-toned">{{ item.description }}</p>
@@ -116,9 +116,9 @@ const quickAccess = [
             v-for="guide in guides"
             :key="guide.title"
             :to="guide.to"
-            class="group rounded-xl border border-default/60 bg-default/30 p-5 transition hover:border-primary/35 hover:bg-elevated/70"
+            class="group rounded-xl border border-default/60 bg-default/30 p-5 transition hover:border-default hover:bg-elevated/70"
           >
-            <UIcon :name="guide.icon" class="size-4 text-toned transition group-hover:text-primary" />
+            <UIcon :name="guide.icon" class="size-4 text-toned transition group-hover:text-highlighted" />
             <p class="mt-3 text-sm/6 font-medium">{{ guide.title }}</p>
             <p class="mt-1 text-sm/6 text-toned">{{ guide.description }}</p>
           </NuxtLink>
@@ -132,9 +132,9 @@ const quickAccess = [
             v-for="item in quickAccess"
             :key="item.title"
             :to="item.to"
-            class="group flex items-center gap-3 rounded-xl border border-default/60 bg-default/30 p-4 transition hover:border-primary/35 hover:bg-elevated/70"
+            class="group flex items-center gap-3 rounded-xl border border-default/60 bg-default/30 p-4 transition hover:border-default hover:bg-elevated/70"
           >
-            <UIcon :name="item.icon" class="size-4 text-toned transition group-hover:text-primary" />
+            <UIcon :name="item.icon" class="size-4 text-toned transition group-hover:text-highlighted" />
             <span class="text-sm/6 font-medium">{{ item.title }}</span>
           </NuxtLink>
         </div>
