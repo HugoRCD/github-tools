@@ -41,7 +41,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@octokit/rest": "^21.1.1"
+    "@octokit/rest": "^22.0.1"
   },
   "peerDependencies": {
     "ai": "^6.0.0",
