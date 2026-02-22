@@ -1,6 +1,6 @@
 import { tool } from 'ai'
 import { z } from 'zod'
-import type { Octokit } from '../client.js'
+import type { Octokit } from '../types'
 
 export const searchCode = (octokit: Octokit) =>
   tool({

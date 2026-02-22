@@ -3,7 +3,8 @@ changelog:
     labels:
       - ignore-for-release
     authors:
-      - octocat
+      - renovate[bot]
+      - github-actions[bot]
   categories:
     - title: Breaking Changes 💥
       labels:

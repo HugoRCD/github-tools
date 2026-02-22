@@ -2,22 +2,33 @@
   "name": "@github-tools/sdk",
   "version": "0.0.1",
   "description": "GitHub tools for the Vercel AI SDK — wrap GitHub's API as AI SDK v6 tools ready to plug into any agent",
+  "author": "HugoRCD <hugo.richard@vercel.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoRCD/github-tools.git",
+    "directory": "packages/github-tools"
+  },
+  "homepage": "https://github.com/HugoRCD/github-tools",
+  "bugs": {
+    "url": "https://github.com/HugoRCD/github-tools/issues"
+  },
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit"
   },
@@ -28,7 +39,6 @@
     "tools",
     "agent"
   ],
-  "author": "HugoRCD",
   "license": "MIT",
   "dependencies": {
     "@octokit/rest": "^21.1.1"
@@ -39,7 +49,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "tsup": "^8.0.0",
+    "tsdown": "^0.20.3",
     "typescript": "^5.0.0"
   },
   "packageManager": "pnpm@10.29.3",

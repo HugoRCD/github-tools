@@ -1,9 +1,9 @@
-import { createOctokit } from './client.js'
-import { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository.js'
-import { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests.js'
-import { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues.js'
-import { searchCode, searchRepositories } from './tools/search.js'
-import { listCommits, getCommit } from './tools/commits.js'
+import { createOctokit } from './client'
+import { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository'
+import { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests'
+import { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues'
+import { searchCode, searchRepositories } from './tools/search'
+import { listCommits, getCommit } from './tools/commits'
 
 export type GithubWriteToolName =
   | 'createOrUpdateFile'
@@ -103,9 +103,10 @@ export function createGithubTools({ token, requireApproval = true }: GithubTools
 export type GithubTools = ReturnType<typeof createGithubTools>
 
 // Re-export individual tool factories for cherry-picking
-export { createOctokit } from './client.js'
-export { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository.js'
-export { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests.js'
-export { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues.js'
-export { searchCode, searchRepositories } from './tools/search.js'
-export { listCommits, getCommit } from './tools/commits.js'
+export { createOctokit } from './client'
+export { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository'
+export { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests'
+export { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues'
+export { searchCode, searchRepositories } from './tools/search'
+export { listCommits, getCommit } from './tools/commits'
+export type { Octokit, ToolOptions } from './types'

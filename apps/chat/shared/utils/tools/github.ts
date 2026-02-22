@@ -1,6 +1,7 @@
 import type { UIToolInvocation, Tool } from 'ai'
+import type { GithubTools } from '@github-tools/sdk'
 
-export type GithubToolName = 'getRepository' | 'listBranches' | 'getFileContent' | 'createOrUpdateFile' | 'listPullRequests' | 'getPullRequest' | 'createPullRequest' | 'mergePullRequest' | 'addPullRequestComment' | 'listIssues' | 'getIssue' | 'createIssue' | 'addIssueComment' | 'closeIssue' | 'searchCode' | 'searchRepositories' | 'listCommits' | 'getCommit'
+export type GithubToolName = keyof GithubTools
 
 export type GithubToolMeta = {
   title: string // card header: "Create Issue"
@@ -27,21 +28,11 @@ export const GITHUB_TOOL_META: Record<GithubToolName, GithubToolMeta> = {
   searchCode: { title: 'Search Code', label: 'Code searched', labelActive: 'Searching code', icon: 'i-lucide-search-code' },
   searchRepositories: { title: 'Search Repositories', label: 'Repositories searched', labelActive: 'Searching repositories', icon: 'i-lucide-search' },
   listCommits: { title: 'List Commits', label: 'Commits listed', labelActive: 'Listing commits', icon: 'i-lucide-git-commit-horizontal' },
-  getCommit: { title: 'Get Commit', label: 'Commit fetched', labelActive: 'Fetching commit', icon: 'i-lucide-git-commit-horizontal' },
+  getCommit: { title: 'Get Commit', label: 'Commit fetched', labelActive: 'Fetching commit', icon: 'i-lucide-git-commit-horizontal' }
 }
 
 export const GITHUB_TOOL_NAMES = new Set<string>(Object.keys(GITHUB_TOOL_META))
 
-export const GITHUB_WRITE_TOOLS = new Set<GithubToolName>([
-  'createOrUpdateFile',
-  'createPullRequest',
-  'mergePullRequest',
-  'addPullRequestComment',
-  'createIssue',
-  'addIssueComment',
-  'closeIssue'
-])
-
-export type GithubUIToolInvocation = {
+export type GithubUIToolInvocation = UIToolInvocation<Tool> & {
   type: `tool-${GithubToolName}`
-} & UIToolInvocation<Tool>
+}

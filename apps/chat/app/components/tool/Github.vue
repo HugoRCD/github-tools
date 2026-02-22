@@ -21,7 +21,10 @@ const isRunning = computed(() =>
   || props.invocation.state === 'input-available'
   || (props.invocation.state === 'approval-responded' && approvalInfo.value?.approved === true)
 )
-const isDenied = computed(() => props.invocation.state === 'approval-responded' && approvalInfo.value?.approved === false)
+const isDenied = computed(() =>
+  props.invocation.state === 'output-denied'
+  || (props.invocation.state === 'approval-responded' && approvalInfo.value?.approved === false)
+)
 const isError = computed(() => props.invocation.state === 'output-error')
 const isDone = computed(() => props.invocation.state === 'output-available')
 

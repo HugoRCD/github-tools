@@ -22,7 +22,8 @@ jobs:
         id: lint_pr_title
         with:
           scopes: |
-            app
+            sdk
+            chat
             deps
           types: |
             breaking

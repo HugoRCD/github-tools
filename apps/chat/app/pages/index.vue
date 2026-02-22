@@ -46,32 +46,28 @@ async function onSubmit() {
 
 const quickChats = [
   {
-    label: 'Why use Nuxt UI?',
-    icon: 'i-logos-nuxt-icon'
+    label: 'Summarize the latest issues on nuxt/nuxt',
+    icon: 'i-lucide-circle-dot'
   },
   {
-    label: 'Help me create a Vue composable',
-    icon: 'i-logos-vue'
+    label: 'Show me open PRs on unjs/nitro',
+    icon: 'i-lucide-git-pull-request'
   },
   {
-    label: 'Tell me more about UnJS',
-    icon: 'i-logos-unjs'
+    label: 'What was the last commit on vuejs/core?',
+    icon: 'i-lucide-git-commit-horizontal'
   },
   {
-    label: 'Why should I consider VueUse?',
-    icon: 'i-logos-vueuse'
+    label: 'Search for OAuth libraries on GitHub',
+    icon: 'i-lucide-search'
   },
   {
-    label: 'Tailwind CSS best practices',
-    icon: 'i-logos-tailwindcss-icon'
+    label: 'Create an issue to improve my README',
+    icon: 'i-lucide-circle-plus'
   },
   {
-    label: 'What is the weather in Bordeaux?',
-    icon: 'i-lucide-sun'
-  },
-  {
-    label: 'Show me a chart of sales data',
-    icon: 'i-lucide-line-chart'
+    label: 'List the branches on my repository',
+    icon: 'i-lucide-git-branch'
   }
 ]
 </script>
@@ -92,7 +88,7 @@ const quickChats = [
 
         <UContainer class="flex-1 flex flex-col justify-center gap-4 sm:gap-6 py-8">
           <h1 class="text-3xl sm:text-4xl text-highlighted font-bold">
-            How can I help you today?
+            What do you want to do on GitHub?
           </h1>
 
           <UChatPrompt

@@ -1,8 +1,6 @@
 import { tool } from 'ai'
 import { z } from 'zod'
-import type { Octokit } from '../client.js'
-
-type ToolOptions = { needsApproval?: boolean }
+import type { Octokit, ToolOptions } from '../types'
 
 export const listPullRequests = (octokit: Octokit) =>
   tool({

@@ -1,31 +1,55 @@
-name: CI/CD
+name: ci
 
 on:
   pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v6
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          version: latest
-          run_install: false
+          node-version: latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm run build
 
-      - name: 📦 Install dependencies
-        run: pnpm install
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm run lint
 
-      - name: 💅 Lint code
-        run: pnpm run lint
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm run typecheck
 
-      - name: 🧪 Run tests
-        run: pnpm run test
+  publish:
+    if: github.event_name == 'pull_request'
+    needs: [build, lint, typecheck]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpx pkg-pr-new publish --compact --no-template --pnpm './packages/github-tools'

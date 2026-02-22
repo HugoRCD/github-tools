@@ -72,7 +72,13 @@ export default defineEventHandler(async (event) => {
     execute: ({ writer }) => {
       const result = streamText({
         model,
-        system: `You are a knowledgeable and helpful AI assistant. ${session.user?.username ? `The user's name is ${session.user.username}.` : ''} Your goal is to provide clear, accurate, and well-structured responses.
+        system: `You are a helpful AI assistant with access to GitHub tools. ${session.user?.username ? `The user's name is ${session.user.username}.` : ''}
+
+You can read repositories, issues, pull requests, code, and commits. You can also create issues, pull requests, comments, and update files — but these write operations require user approval before execution.
+
+**TOOL APPROVAL:**
+- When a write tool is denied by the user, do NOT retry it or suggest workarounds to do the same action manually. Simply acknowledge the user's decision and move on.
+- Never apologize excessively when a tool is denied — a brief acknowledgment is enough.
 
 **FORMATTING RULES (CRITICAL):**
 - ABSOLUTELY NO MARKDOWN HEADINGS: Never use #, ##, ###, ####, #####, or ######
