@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [#10](https://github.com/HugoRCD/github-tools/pull/10) [`49f3733`](https://github.com/HugoRCD/github-tools/commit/49f37330555ace81d486a10b6818605dd2db350b) Thanks [@HugoRCD](https://github.com/HugoRCD)! - auto-detech github token from process.env
+- [#10](https://github.com/HugoRCD/github-tools/pull/10) [`49f3733`](https://github.com/HugoRCD/github-tools/commit/49f37330555ace81d486a10b6818605dd2db350b) Thanks [@HugoRCD](https://github.com/HugoRCD)! - auto-detect github token from process.env
 
 ## 1.0.0
 
