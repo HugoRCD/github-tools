@@ -69,7 +69,11 @@ const PRESET_TOOLS: Record<GithubToolPreset, string[]> = {
 }
 
 export type GithubToolsOptions = {
-  token: string
+  /**
+   * GitHub personal access token.
+   * Falls back to `process.env.GITHUB_TOKEN` when omitted.
+   */
+  token?: string
   requireApproval?: ApprovalConfig
   /**
    * Restrict the returned tools to a predefined preset.
@@ -132,8 +136,12 @@ function resolvePresetTools(preset: GithubToolPreset | GithubToolPreset[]): Set<
  * })
  * ```
  */
-export function createGithubTools({ token, requireApproval = true, preset }: GithubToolsOptions) {
-  const octokit = createOctokit(token)
+export function createGithubTools({ token, requireApproval = true, preset }: GithubToolsOptions = {}) {
+  const resolvedToken = token || process.env.GITHUB_TOKEN
+  if (!resolvedToken) {
+    throw new Error('GitHub token is required. Pass it as `token` or set the GITHUB_TOKEN environment variable.')
+  }
+  const octokit = createOctokit(resolvedToken)
   const approval = (name: GithubWriteToolName) => ({ needsApproval: resolveApproval(name, requireApproval) })
   const allowed = preset ? resolvePresetTools(preset) : null
 
