@@ -1,93 +1,175 @@
-# default-repository
+# @github-tools/sdk
 
-<!-- automd:badges color=black license provider=shields -->
+[![npm version](https://img.shields.io/npm/v/@github-tools/sdk?color=black)](https://npmjs.com/package/@github-tools/sdk)
+[![npm downloads](https://img.shields.io/npm/dm/@github-tools/sdk?color=black)](https://npm.chart.dev/@github-tools/sdk)
+[![TypeScript](https://img.shields.io/badge/TypeScript-black?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![license](https://img.shields.io/github/license/HugoRCD/github-tools?color=black)](https://github.com/HugoRCD/github-tools/blob/main/LICENSE)
 
-[![npm version](https://img.shields.io/npm/v/default-repository?color=black)](https://npmjs.com/package/default-repository)
-[![npm downloads](https://img.shields.io/npm/dm/default-repository?color=black)](https://npmjs.com/package/default-repository)
-[![license](https://img.shields.io/github/license/HugoRCD/default-repository?color=black)](https://github.com/HugoRCD/default-repository/blob/main/LICENSE)
+GitHub tools for the [AI SDK](https://ai-sdk.dev) — wrap GitHub's REST API as ready-to-use tools for any agent or `generateText` / `streamText` call.
 
-<!-- /automd -->
+18 tools covering repositories, pull requests, issues, commits, and search. Write operations support granular approval control out of the box.
 
-This repository is a template repository for creating new repositories with everything you need to get started.
-
-## Usage
-
-Install package:
-
-<!-- automd:pm-install -->
+## Installation
 
 ```sh
-# ✨ Auto-detect
-npx nypm install default-repository
-
-# npm
-npm install default-repository
-
-# yarn
-yarn add default-repository
-
-# pnpm
-pnpm install default-repository
-
-# bun
-bun install default-repository
+pnpm add @github-tools/sdk
 ```
 
-<!-- /automd -->
+`ai` and `zod` are peer dependencies:
 
-## Development
+```sh
+pnpm add ai zod
+```
 
-Before you start, you can use the `./scripts/rename.sh` script to rename all `default-repository` occurrences in the repository to your new repository name.
+## Quick Start
 
-<!-- automd:fetch url="gh:hugorcd/markdown/main/src/local_development.md" -->
+```ts
+import { createGithubTools } from '@github-tools/sdk'
+import { generateText } from 'ai'
 
-<details>
-  <summary>Local development</summary>
+const result = await generateText({
+  model: yourModel,
+  tools: createGithubTools({ token: process.env.GITHUB_TOKEN! }),
+  prompt: 'List the open pull requests on vercel/ai and summarize them.',
+})
+```
 
-- Clone this repository
-- Install latest LTS version of [Node.js](https://nodejs.org/en/)
-- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
-- Install dependencies using `bun install`
+### Cherry-Picking Tools
 
-</details>
+You can import individual tool factories instead of the full set:
 
-<!-- /automd -->
+```ts
+import { createOctokit, listPullRequests, createIssue } from '@github-tools/sdk'
 
-<!-- automd:fetch url="gh:hugorcd/markdown/main/src/contributions.md" -->
+const octokit = createOctokit(process.env.GITHUB_TOKEN!)
 
-## Contributing
-To start contributing, you can follow these steps:
+const tools = {
+  listPullRequests: listPullRequests(octokit),
+  createIssue: createIssue(octokit),
+}
+```
 
-1. First raise an issue to discuss the changes you would like to make.
-2. Fork the repository.
-3. Create a branch using conventional commits and the issue number as the branch name. For example, `feat/123` or `fix/456`.
-4. Make changes following the local development steps.
-5. Commit your changes following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-6. If your changes affect the code, run tests using `bun run test`.
-7. Create a pull request following the [Pull Request Template](https://github.com/HugoRCD/markdown/blob/main/src/pull_request_template.md).
-   - To be merged, the pull request must pass the tests/workflow and have at least one approval.
-   - If your changes affect the documentation, make sure to update it.
-   - If your changes affect the code, make sure to update the tests.
-8. Wait for the maintainers to review your pull request.
-9. Once approved, the pull request will be merged in the next release !
+## Approval Control
 
-<!-- /automd -->
+Write operations (creating issues, merging PRs, pushing files, …) require user approval by default. This is designed for human-in-the-loop agent workflows.
 
-<!-- automd:contributors license=Apache author=HugoRCD-->
+```ts
+// All writes need approval (default)
+createGithubTools({ token })
 
-Published under the [APACHE](https://github.com/HugoRCD/default-repository/blob/main/LICENSE) license.
-Made by [@HugoRCD](https://github.com/HugoRCD) and [community](https://github.com/HugoRCD/default-repository/graphs/contributors) 💛
-<br><br>
-<a href="https://github.com/HugoRCD/default-repository/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=HugoRCD/default-repository" />
-</a>
+// No approval needed
+createGithubTools({ token, requireApproval: false })
 
-<!-- /automd -->
+// Granular: only destructive actions need approval
+createGithubTools({
+  token,
+  requireApproval: {
+    mergePullRequest: true,
+    createOrUpdateFile: true,
+    closeIssue: true,
+    createPullRequest: false,
+    addPullRequestComment: false,
+    createIssue: false,
+    addIssueComment: false,
+  },
+})
+```
 
-<!-- automd:with-automd lastUpdate -->
+Write tools: `createOrUpdateFile`, `createPullRequest`, `mergePullRequest`, `addPullRequestComment`, `createIssue`, `addIssueComment`, `closeIssue`.
 
----
+All other tools are read-only and never require approval.
 
-_🤖 auto updated with [automd](https://automd.unjs.io) (last updated: Sat Aug 24 2024)_
+## Available Tools
 
-<!-- /automd -->
+### Repository
+
+| Tool | Description |
+|---|---|
+| `getRepository` | Get repository metadata (stars, language, default branch, …) |
+| `listBranches` | List branches |
+| `getFileContent` | Read a file or directory listing |
+| `createOrUpdateFile` | Create or update a file and commit it |
+
+### Pull Requests
+
+| Tool | Description |
+|---|---|
+| `listPullRequests` | List PRs filtered by state |
+| `getPullRequest` | Get a PR's full details (diff stats, body, merge status) |
+| `createPullRequest` | Open a new PR |
+| `mergePullRequest` | Merge a PR (merge, squash, or rebase) |
+| `addPullRequestComment` | Post a comment on a PR |
+
+### Issues
+
+| Tool | Description |
+|---|---|
+| `listIssues` | List issues filtered by state and labels |
+| `getIssue` | Get an issue's full details |
+| `createIssue` | Open a new issue |
+| `addIssueComment` | Post a comment on an issue |
+| `closeIssue` | Close an issue (completed or not planned) |
+
+### Commits
+
+| Tool | Description |
+|---|---|
+| `listCommits` | List commits, optionally filtered by file path, author, or date range |
+| `getCommit` | Get a commit's full details including changed files and diffs |
+
+### Search
+
+| Tool | Description |
+|---|---|
+| `searchCode` | Search code across GitHub with qualifier support |
+| `searchRepositories` | Search repositories by keyword, topic, language, stars, … |
+
+## GitHub Token
+
+All tools authenticate with a GitHub personal access token (PAT).
+
+### Fine-grained token (recommended)
+
+Create one at **GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens**.
+
+| Permission | Level | Required for |
+|---|---|---|
+| **Metadata** | Read-only | Always required (auto-included) |
+| **Contents** | Read-only | `getRepository`, `listBranches`, `getFileContent`, `listCommits`, `getCommit` |
+| **Contents** | Read and write | `createOrUpdateFile` |
+| **Pull requests** | Read-only | `listPullRequests`, `getPullRequest` |
+| **Pull requests** | Read and write | `createPullRequest`, `mergePullRequest`, `addPullRequestComment` |
+| **Issues** | Read-only | `listIssues`, `getIssue` |
+| **Issues** | Read and write | `createIssue`, `addIssueComment`, `closeIssue` |
+
+Search tools (`searchCode`, `searchRepositories`) work with any token.
+
+### Classic token
+
+| Scope | Required for |
+|---|---|
+| `public_repo` | All tools on public repositories |
+| `repo` | All tools on public and private repositories |
+
+## API
+
+### `createGithubTools(options)`
+
+Returns an object of all 18 tools, ready to spread into `tools` of any AI SDK call.
+
+```ts
+type GithubToolsOptions = {
+  token: string
+  requireApproval?: boolean | Partial<Record<GithubWriteToolName, boolean>>
+}
+```
+
+### `createOctokit(token)`
+
+Returns a configured [`@octokit/rest`](https://github.com/octokit/rest.js) instance. Useful when cherry-picking individual tools or building custom ones.
+
+## License
+
+[MIT](./LICENSE)
+
+Made by [@HugoRCD](https://github.com/HugoRCD)
