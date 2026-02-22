@@ -1,5 +1,5 @@
-import { convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse, generateText, stepCountIs, streamText } from 'ai'
-import { createGithubTools } from '@github-tools/sdk'
+import { convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse, generateText, stepCountIs } from 'ai'
+import { createGithubAgent } from '@github-tools/sdk'
 import { z } from 'zod'
 import { db, schema } from 'hub:db'
 import { and, eq } from 'drizzle-orm'
@@ -26,7 +26,24 @@ export default defineEventHandler(async (event) => {
 
   const { githubToken: configToken } = useRuntimeConfig()
   const token = session.secure?.githubToken ?? configToken
-  const githubTools = token ? createGithubTools({ token }) : {}
+
+  const agent = createGithubAgent({
+    model,
+    token: token || '',
+    additionalInstructions: [
+      session.user?.username ? `The user's name is ${session.user.username}.` : '',
+      '**FORMATTING RULES (CRITICAL):**',
+      '- ABSOLUTELY NO MARKDOWN HEADINGS: Never use #, ##, ###, ####, #####, or ######',
+      '- NO underline-style headings with === or ---',
+      '- Use **bold text** for emphasis and section labels instead',
+      '- Start all responses with content, never with a heading'
+    ].filter(Boolean).join('\n'),
+    stopWhen: stepCountIs(token ? 20 : 5),
+    providerOptions: {
+      openai: { reasoningEffort: 'low', reasoningSummary: 'detailed' },
+      google: { thinkingConfig: { includeThoughts: true, thinkingBudget: 2048 } }
+    }
+  })
 
   const chat = await db.query.chats.findFirst({
     where: () => and(
@@ -68,39 +85,8 @@ export default defineEventHandler(async (event) => {
 
   const stream = createUIMessageStream({
     originalMessages: messages,
-    execute: ({ writer }) => {
-      const result = streamText({
-        model,
-        system: `You are a helpful AI assistant with access to GitHub tools. ${session.user?.username ? `The user's name is ${session.user.username}.` : ''}
-
-You can read repositories, issues, pull requests, code, and commits. You can also create issues, pull requests, comments, and update files — but these write operations require user approval before execution.
-
-**TOOL APPROVAL:**
-- When a write tool is denied by the user, do NOT retry it or suggest workarounds to do the same action manually. Simply acknowledge the user's decision and move on.
-- Never apologize excessively when a tool is denied — a brief acknowledgment is enough.
-
-**FORMATTING RULES (CRITICAL):**
-- ABSOLUTELY NO MARKDOWN HEADINGS: Never use #, ##, ###, ####, #####, or ######
-- NO underline-style headings with === or ---
-- Use **bold text** for emphasis and section labels instead
-- Start all responses with content, never with a heading
-
-**RESPONSE QUALITY:**
-- Be concise yet comprehensive
-- Use examples when helpful
-- Maintain a friendly, professional tone`,
-        messages: modelMessages,
-        providerOptions: {
-          openai: { reasoningEffort: 'low', reasoningSummary: 'detailed' },
-          google: { thinkingConfig: { includeThoughts: true, thinkingBudget: 2048 } }
-        },
-        stopWhen: stepCountIs(token ? 20 : 5),
-        tools: {
-          weather: weatherTool,
-          chart: chartTool,
-          ...githubTools
-        }
-      })
+    execute: async ({ writer }) => {
+      const result = await agent.stream({ messages: modelMessages })
 
       if (!chat.title && !isContinuation) {
         writer.write({ type: 'data-chat-title', data: { message: 'Generating title...' }, transient: true })
@@ -108,7 +94,7 @@ You can read repositories, issues, pull requests, code, and commits. You can als
 
       writer.merge(result.toUIMessageStream({
         sendReasoning: true,
-        onError: error => String(error)
+        onError: (error: unknown) => String(error)
       }))
     },
     onFinish: async ({ responseMessage, isContinuation }) => {

@@ -44,7 +44,7 @@ const context = computed(() => {
 </script>
 
 <template>
-  <div class="inline-flex items-center gap-1.5 text-xs my-1">
+  <div class="flex items-center gap-1.5 text-xs my-1">
     <UIcon :name="meta.icon" class="size-3 shrink-0 text-muted" />
     <span class="text-default/70 font-medium">{{ label }}</span>
     <span v-if="context" class="text-muted font-mono">{{ context }}</span>

@@ -200,6 +200,57 @@ type GithubToolsOptions = {
 type GithubToolPreset = 'code-review' | 'issue-triage' | 'repo-explorer' | 'maintainer'
 ```
 
+### `createGithubAgent(options)`
+
+Returns a `ToolLoopAgent` instance with `.generate()` and `.stream()` methods, pre-configured with GitHub tools and tailored instructions.
+
+```ts
+import { createGithubAgent } from '@github-tools/sdk'
+
+// Minimal — all tools, generic prompt
+const agent = createGithubAgent({
+  model: 'anthropic/claude-sonnet-4-6',
+  token: process.env.GITHUB_TOKEN!,
+})
+
+// With preset — scoped tools + tailored prompt
+const reviewer = createGithubAgent({
+  model: 'anthropic/claude-sonnet-4-6',
+  token: process.env.GITHUB_TOKEN!,
+  preset: 'code-review',
+})
+
+// Add context to the built-in prompt
+const triager = createGithubAgent({
+  model: 'anthropic/claude-sonnet-4-6',
+  token: process.env.GITHUB_TOKEN!,
+  preset: 'issue-triage',
+  additionalInstructions: 'Focus on the nuxt/ui repository. Always respond in French.',
+})
+
+// Full override — replace the built-in prompt entirely
+const custom = createGithubAgent({
+  model: 'anthropic/claude-sonnet-4-6',
+  token: process.env.GITHUB_TOKEN!,
+  instructions: 'You are a security auditor. Only flag security-related issues.',
+})
+
+// Use the agent
+const result = await reviewer.generate({ prompt: 'Review PR #42 on vercel/ai' })
+const stream = reviewer.stream({ prompt: 'Review PR #42 on vercel/ai' })
+```
+
+| Option | Description |
+|---|---|
+| `model` | Language model — string (`'anthropic/claude-sonnet-4-6'`) or provider instance |
+| `token` | GitHub personal access token |
+| `preset` | Optional preset or array of presets to scope tools |
+| `requireApproval` | Approval config (same as `createGithubTools`) |
+| `instructions` | Replaces the built-in system prompt entirely |
+| `additionalInstructions` | Appended to the built-in system prompt |
+
+All other `ToolLoopAgent` options (`stopWhen`, `toolChoice`, `onStepFinish`, etc.) are passed through.
+
 ### `createOctokit(token)`
 
 Returns a configured [`@octokit/rest`](https://github.com/octokit/rest.js) instance. Useful when cherry-picking individual tools or building custom ones.
