@@ -1,4 +1,9 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: 'GitHub Tools',
+  titleTemplate: '%s',
+})
+
 const layers = [
   {
     title: 'Tools',

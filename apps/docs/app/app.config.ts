@@ -5,6 +5,11 @@ export default defineAppConfig({
   socials: {
     x: 'https://x.com/hugorcd',
   },
+  seo: {
+    titleTemplate: '%s - GitHub Tools',
+    title: 'GitHub Tools',
+    description: 'AI-native GitHub tooling for safe, production-ready workflows.',
+  },
   github: {
     rootDir: 'apps/docs',
   },
