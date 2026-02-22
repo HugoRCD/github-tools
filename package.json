@@ -11,6 +11,7 @@
     "docs:build": "pnpm --filter @github-tools/docs build",
     "docs:generate": "pnpm --filter @github-tools/docs generate",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "typecheck": "turbo run typecheck",
     "changeset": "changeset",
     "version-packages": "changeset version",
