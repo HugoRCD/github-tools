@@ -19,14 +19,13 @@ export default defineEventHandler(async (event) => {
     id: z.string()
   }).parse)
 
-  const { model, messages, githubToken } = await readValidatedBody(event, z.object({
+  const { model, messages } = await readValidatedBody(event, z.object({
     model: z.string(),
-    messages: z.array(z.custom<UIMessage>()),
-    githubToken: z.string().optional()
+    messages: z.array(z.custom<UIMessage>())
   }).parse)
 
   const { githubToken: configToken } = useRuntimeConfig()
-  const token = githubToken ?? configToken
+  const token = session.secure?.githubToken ?? configToken
   const githubTools = token ? createGithubTools({ token }) : {}
 
   const chat = await db.query.chats.findFirst({

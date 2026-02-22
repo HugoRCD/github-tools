@@ -2,7 +2,10 @@ import { db, schema } from 'hub:db'
 import { and, eq } from 'drizzle-orm'
 
 export default defineOAuthGitHubEventHandler({
-  async onSuccess(event, { user: ghUser }) {
+  config: {
+    scope: ['repo']
+  },
+  async onSuccess(event, { user: ghUser, tokens }) {
     const session = await getUserSession(event)
 
     let user = await db.query.users.findFirst({
@@ -22,13 +25,17 @@ export default defineOAuthGitHubEventHandler({
         providerId: ghUser.id.toString()
       }).returning()
     } else {
-      // Assign anonymous chats with session id to user
       await db.update(schema.chats).set({
         userId: user.id
       }).where(eq(schema.chats.userId, session.id))
     }
 
-    await setUserSession(event, { user })
+    await setUserSession(event, {
+      user,
+      secure: {
+        githubToken: tokens.access_token
+      }
+    })
 
     return sendRedirect(event, '/')
   },

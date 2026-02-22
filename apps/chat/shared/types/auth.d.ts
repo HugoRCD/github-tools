@@ -1,4 +1,3 @@
-// auth.d.ts
 declare module '#auth-utils' {
   interface User {
     id: string
@@ -8,6 +7,10 @@ declare module '#auth-utils' {
     username: string
     provider: 'github'
     providerId: string
+  }
+
+  interface SecureSessionData {
+    githubToken?: string
   }
 }
 
