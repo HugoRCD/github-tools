@@ -59,7 +59,11 @@ type AgentOptions = Omit<ToolLoopAgentSettings, 'model' | 'tools' | 'instruction
 
 export type CreateGithubAgentOptions = AgentOptions & {
   model: ToolLoopAgentSettings['model']
-  token: string
+  /**
+   * GitHub personal access token.
+   * Falls back to `process.env.GITHUB_TOKEN` when omitted.
+   */
+  token?: string
   preset?: GithubToolPreset | GithubToolPreset[]
   requireApproval?: ApprovalConfig
   instructions?: string
