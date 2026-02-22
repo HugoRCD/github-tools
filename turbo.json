@@ -3,7 +3,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".nuxt/**", ".output/**"]
+      "outputs": [".vercel/output/**", "dist/**", ".nuxt/**", ".output/**"],
+      "env": [
+        "NUXT_STUDIO_SSO_URL",
+        "NUXT_STUDIO_SSO_CLIENT_ID",
+        "NUXT_STUDIO_SSO_CLIENT_SECRET",
+        "AI_GATEWAY_API_KEY",
+        "NUXT_SITE_URL"
+      ]
     },
     "dev": {
       "cache": false,

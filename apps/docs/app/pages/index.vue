@@ -4,6 +4,11 @@ useSeoMeta({
   titleTemplate: '%s',
 })
 
+defineOgImageComponent('OgImageLanding', {
+  title: 'GitHub Tools',
+  description: 'AI-callable GitHub tools for generateText, streamText, and agent loops.',
+})
+
 const layers = [
   {
     title: 'Tools',
