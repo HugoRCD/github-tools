@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import { useDocusI18n } from '#imports'
+
+const appConfig = useAppConfig()
+const site = useSiteConfig()
+
+const { isEnabled: isAssistantEnabled } = useAssistant()
+const { localePath, isEnabled, locales } = useDocusI18n()
+
+const links = computed(() => appConfig.github && appConfig.github.url
+  ? [
+      {
+        'icon': 'i-simple-icons-github',
+        'to': appConfig.github.url,
+        'target': '_blank',
+        'aria-label': 'GitHub',
+      },
+    ]
+  : [])
+</script>
+
+<template>
+  <UHeader
+    :ui="{ center: 'flex-1' }"
+    :to="localePath('/')"
+    :title="appConfig.header?.title || site.name"
+  >
+    <AppHeaderCenter />
+
+    <template #title>
+      <AppHeaderLogo class="h-6 w-auto shrink-0" />
+    </template>
+
+    <template #right>
+      <AppHeaderCTA />
+
+      <template v-if="isAssistantEnabled">
+        <AssistantChat />
+      </template>
+
+      <UContentSearchButton class="lg:hidden" />
+
+      <template v-if="links?.length">
+        <UButton
+          v-for="(link, index) of links"
+          :key="index"
+          v-bind="{ color: 'neutral', variant: 'ghost', ...link }"
+        />
+      </template>
+    </template>
+
+    <template #toggle="{ open, toggle }">
+      <IconMenuToggle
+        :open="open"
+        class="lg:hidden"
+        @click="toggle"
+      />
+    </template>
+
+    <template #body>
+      <AppHeaderBody />
+    </template>
+  </UHeader>
+</template>
