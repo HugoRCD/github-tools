@@ -127,7 +127,7 @@ importers:
         specifier: ^12.6.2
         version: 12.6.2
       docus:
-        specifier: latest
+        specifier: ^5.6.1
         version: 5.6.1(2f2149bbb8edd86b28ce4117c0fcb38e)
       nuxt:
         specifier: ^4.3.1
@@ -8399,6 +8399,7 @@ packages:
 
   unplugin-vue-router@0.16.2:
     resolution: {integrity: sha512-lE6ZjnHaXfS2vFI/PSEwdKcdOo5RwAbCKUnPBIN9YwLgSWas3x+qivzQvJa/uxhKzJldE6WK43aDKjGj9Rij9w==}
+    deprecated: 'Merged into vuejs/router. Migrate: https://router.vuejs.org/guide/migration/v4-to-v5.html'
     peerDependencies:
       '@vue/compiler-sfc': ^3.5.17
       vue-router: ^4.6.0

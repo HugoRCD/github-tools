@@ -5,6 +5,11 @@ export default defineNuxtConfig({
     preference: 'dark',
     fallback: 'dark',
   },
+  content: {
+    experimental: {
+      sqliteConnector: 'native'
+    }
+  },
   icon: {
     customCollections: [
       {
