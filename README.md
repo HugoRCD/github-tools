@@ -209,20 +209,20 @@ import { createGithubAgent } from '@github-tools/sdk'
 
 // Minimal — all tools, generic prompt
 const agent = createGithubAgent({
-  model: 'anthropic/claude-sonnet-4-6',
+  model: 'anthropic/claude-sonnet-4.6',
   token: process.env.GITHUB_TOKEN!,
 })
 
 // With preset — scoped tools + tailored prompt
 const reviewer = createGithubAgent({
-  model: 'anthropic/claude-sonnet-4-6',
+  model: 'anthropic/claude-sonnet-4.6',
   token: process.env.GITHUB_TOKEN!,
   preset: 'code-review',
 })
 
 // Add context to the built-in prompt
 const triager = createGithubAgent({
-  model: 'anthropic/claude-sonnet-4-6',
+  model: 'anthropic/claude-sonnet-4.6',
   token: process.env.GITHUB_TOKEN!,
   preset: 'issue-triage',
   additionalInstructions: 'Focus on the nuxt/ui repository. Always respond in French.',
@@ -230,7 +230,7 @@ const triager = createGithubAgent({
 
 // Full override — replace the built-in prompt entirely
 const custom = createGithubAgent({
-  model: 'anthropic/claude-sonnet-4-6',
+  model: 'anthropic/claude-sonnet-4.6',
   token: process.env.GITHUB_TOKEN!,
   instructions: 'You are a security auditor. Only flag security-related issues.',
 })
@@ -242,7 +242,7 @@ const stream = reviewer.stream({ prompt: 'Review PR #42 on vercel/ai' })
 
 | Option | Description |
 |---|---|
-| `model` | Language model — string (`'anthropic/claude-sonnet-4-6'`) or provider instance |
+| `model` | Language model — string (`'anthropic/claude-sonnet-4.6'`) or provider instance |
 | `token` | GitHub personal access token |
 | `preset` | Optional preset or array of presets to scope tools |
 | `requireApproval` | Approval config (same as `createGithubTools`) |

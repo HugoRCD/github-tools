@@ -80,7 +80,7 @@ export type CreateGithubAgentOptions = AgentOptions & {
  * import { createGithubAgent } from '@github-tools/sdk'
  *
  * const agent = createGithubAgent({
- *   model: 'anthropic/claude-sonnet-4-6',
+ *   model: 'anthropic/claude-sonnet-4.6',
  *   token: process.env.GITHUB_TOKEN!,
  *   preset: 'code-review',
  * })
