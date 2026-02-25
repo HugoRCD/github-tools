@@ -10,6 +10,9 @@ export default defineNuxtConfig({
       sqliteConnector: 'native'
     }
   },
+  mcp: {
+    name: 'GitHub Tools MCP',
+  },
   icon: {
     customCollections: [
       {
