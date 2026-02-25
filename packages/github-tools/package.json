@@ -5,12 +5,12 @@
   "author": "HugoRCD <hugo.richard@vercel.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HugoRCD/github-tools.git",
+    "url": "git+https://github.com/vercel-labs/github-tools.git",
     "directory": "packages/github-tools"
   },
-  "homepage": "https://github.com/HugoRCD/github-tools",
+  "homepage": "https://github.com/vercel-labs/github-tools",
   "bugs": {
-    "url": "https://github.com/HugoRCD/github-tools/issues"
+    "url": "https://github.com/vercel-labs/github-tools/issues"
   },
   "type": "module",
   "sideEffects": false,
