@@ -2,12 +2,12 @@
 useSeoMeta({
   title: 'GitHub Tools',
   titleTemplate: '%s',
+  ogImage: '/og.png',
+  twitterImage: '/og.png',
+  twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('OgImageLanding', {
-  title: 'GitHub Tools',
-  description: 'AI-callable GitHub tools for generateText, streamText, and agent loops.',
-})
+defineOgImage(false)
 
 const layers = [
   {
