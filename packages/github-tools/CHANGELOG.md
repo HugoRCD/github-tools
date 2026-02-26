@@ -1,5 +1,11 @@
 # @github-tools/sdk
 
+## 1.2.0
+
+### Minor Changes
+
+- [#15](https://github.com/vercel-labs/github-tools/pull/15) [`991d3f2`](https://github.com/vercel-labs/github-tools/commit/991d3f27f812f53f5741f644fedcb9b78b3c16fa) Thanks [@HugoRCD](https://github.com/HugoRCD)! - feat: add repository management tools
+
 ## 1.1.0
 
 ### Minor Changes
