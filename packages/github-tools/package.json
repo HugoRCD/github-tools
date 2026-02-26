@@ -29,7 +29,8 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "lint": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -49,8 +50,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.13",
+    "eslint": "^9.19.0",
     "tsdown": "^0.20.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.24.0"
   },
   "packageManager": "pnpm@10.30.2",
   "publishConfig": {

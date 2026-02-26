@@ -19,5 +19,9 @@
     "zod": "^4.3.6",
     "zod-to-json-schema": "^3.25.1"
   },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.15.1",
+    "eslint": "^9.19.0"
+  },
   "packageManager": "pnpm@10.30.2"
 }
