@@ -10,7 +10,7 @@ export const getRepository = (octokit: Octokit) =>
       repo: z.string().describe('Repository name'),
     }),
     execute: async ({ owner, repo }) => {
-      const { data } = await octokit.repos.get({ owner, repo })
+      const { data } = await octokit.rest.repos.get({ owner, repo })
       return {
         name: data.name,
         fullName: data.full_name,
@@ -37,7 +37,7 @@ export const listBranches = (octokit: Octokit) =>
       perPage: z.number().optional().default(30).describe('Number of branches to return (max 100)'),
     }),
     execute: async ({ owner, repo, perPage }) => {
-      const { data } = await octokit.repos.listBranches({ owner, repo, per_page: perPage })
+      const { data } = await octokit.rest.repos.listBranches({ owner, repo, per_page: perPage })
       return data.map(branch => ({
         name: branch.name,
         sha: branch.commit.sha,
@@ -56,7 +56,7 @@ export const getFileContent = (octokit: Octokit) =>
       ref: z.string().optional().describe('Branch, tag, or commit SHA (defaults to the default branch)'),
     }),
     execute: async ({ owner, repo, path, ref }) => {
-      const { data } = await octokit.repos.getContent({ owner, repo, path, ref })
+      const { data } = await octokit.rest.repos.getContent({ owner, repo, path, ref })
       if (Array.isArray(data)) {
         return { type: 'directory', entries: data.map(e => ({ name: e.name, type: e.type, path: e.path })) }
       }
@@ -89,7 +89,7 @@ export const createOrUpdateFile = (octokit: Octokit, { needsApproval = true }: T
     }),
     execute: async ({ owner, repo, path, message, content, branch, sha }) => {
       const encoded = Buffer.from(content).toString('base64')
-      const { data } = await octokit.repos.createOrUpdateFileContents({
+      const { data } = await octokit.rest.repos.createOrUpdateFileContents({
         owner,
         repo,
         path,

@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-ui-template-chat",
+  "name": "@github-tools/chat",
   "private": true,
   "type": "module",
   "scripts": {
@@ -44,7 +44,7 @@
     "@nuxt/eslint": "^1.15.1",
     "@types/node": "^24.10.13",
     "drizzle-kit": "^0.31.9",
-    "eslint": "^10.0.2",
+    "eslint": "^9.19.0",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.5"
   },

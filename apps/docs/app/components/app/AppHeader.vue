@@ -5,7 +5,7 @@ const appConfig = useAppConfig()
 const site = useSiteConfig()
 
 const { isEnabled: isAssistantEnabled } = useAssistant()
-const { localePath, isEnabled, locales } = useDocusI18n()
+const { localePath } = useDocusI18n()
 
 const links = computed(() => appConfig.github && appConfig.github.url
   ? [
