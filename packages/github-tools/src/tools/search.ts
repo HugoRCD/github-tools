@@ -10,7 +10,7 @@ export const searchCode = (octokit: Octokit) =>
       perPage: z.number().optional().default(10).describe('Number of results to return (max 30)'),
     }),
     execute: async ({ query, perPage }) => {
-      const { data } = await octokit.search.code({ q: query, per_page: perPage })
+      const { data } = await octokit.rest.search.code({ q: query, per_page: perPage })
       return {
         totalCount: data.total_count,
         items: data.items.map(item => ({
@@ -34,7 +34,7 @@ export const searchRepositories = (octokit: Octokit) =>
       order: z.enum(['asc', 'desc']).optional().default('desc').describe('Sort order'),
     }),
     execute: async ({ query, perPage, sort, order }) => {
-      const { data } = await octokit.search.repos({ q: query, per_page: perPage, sort, order })
+      const { data } = await octokit.rest.search.repos({ q: query, per_page: perPage, sort, order })
       return {
         totalCount: data.total_count,
         items: data.items.map(repo => ({

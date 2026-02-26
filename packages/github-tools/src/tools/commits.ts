@@ -16,7 +16,7 @@ export const listCommits = (octokit: Octokit) =>
       perPage: z.number().optional().default(30).describe('Number of results to return (max 100)'),
     }),
     execute: async ({ owner, repo, path, sha, author, since, until, perPage }) => {
-      const { data } = await octokit.repos.listCommits({
+      const { data } = await octokit.rest.repos.listCommits({
         owner,
         repo,
         path,
@@ -46,7 +46,7 @@ export const getCommit = (octokit: Octokit) =>
       ref: z.string().describe('Commit SHA, branch name, or tag'),
     }),
     execute: async ({ owner, repo, ref }) => {
-      const { data } = await octokit.repos.getCommit({ owner, repo, ref })
+      const { data } = await octokit.rest.repos.getCommit({ owner, repo, ref })
       return {
         sha: data.sha,
         message: data.commit.message,

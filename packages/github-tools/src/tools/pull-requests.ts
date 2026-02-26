@@ -12,7 +12,7 @@ export const listPullRequests = (octokit: Octokit) =>
       perPage: z.number().optional().default(30).describe('Number of results to return (max 100)'),
     }),
     execute: async ({ owner, repo, state, perPage }) => {
-      const { data } = await octokit.pulls.list({ owner, repo, state, per_page: perPage })
+      const { data } = await octokit.rest.pulls.list({ owner, repo, state, per_page: perPage })
       return data.map(pr => ({
         number: pr.number,
         title: pr.title,
@@ -37,7 +37,7 @@ export const getPullRequest = (octokit: Octokit) =>
       pullNumber: z.number().describe('Pull request number'),
     }),
     execute: async ({ owner, repo, pullNumber }) => {
-      const { data } = await octokit.pulls.get({ owner, repo, pull_number: pullNumber })
+      const { data } = await octokit.rest.pulls.get({ owner, repo, pull_number: pullNumber })
       return {
         number: data.number,
         title: data.title,
@@ -74,7 +74,7 @@ export const createPullRequest = (octokit: Octokit, { needsApproval = true }: To
       draft: z.boolean().optional().default(false).describe('Create as draft pull request'),
     }),
     execute: async ({ owner, repo, title, body, head, base, draft }) => {
-      const { data } = await octokit.pulls.create({ owner, repo, title, body, head, base, draft })
+      const { data } = await octokit.rest.pulls.create({ owner, repo, title, body, head, base, draft })
       return {
         number: data.number,
         title: data.title,
@@ -100,7 +100,7 @@ export const mergePullRequest = (octokit: Octokit, { needsApproval = true }: Too
       mergeMethod: z.enum(['merge', 'squash', 'rebase']).optional().default('merge').describe('Merge strategy'),
     }),
     execute: async ({ owner, repo, pullNumber, commitTitle, commitMessage, mergeMethod }) => {
-      const { data } = await octokit.pulls.merge({
+      const { data } = await octokit.rest.pulls.merge({
         owner,
         repo,
         pull_number: pullNumber,
@@ -127,7 +127,7 @@ export const addPullRequestComment = (octokit: Octokit, { needsApproval = true }
       body: z.string().describe('Comment text (supports Markdown)'),
     }),
     execute: async ({ owner, repo, pullNumber, body }) => {
-      const { data } = await octokit.issues.createComment({ owner, repo, issue_number: pullNumber, body })
+      const { data } = await octokit.rest.issues.createComment({ owner, repo, issue_number: pullNumber, body })
       return {
         id: data.id,
         url: data.html_url,

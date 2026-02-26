@@ -13,7 +13,7 @@ export const listIssues = (octokit: Octokit) =>
       perPage: z.number().optional().default(30).describe('Number of results to return (max 100)'),
     }),
     execute: async ({ owner, repo, state, labels, perPage }) => {
-      const { data } = await octokit.issues.listForRepo({
+      const { data } = await octokit.rest.issues.listForRepo({
         owner,
         repo,
         state,
@@ -44,7 +44,7 @@ export const getIssue = (octokit: Octokit) =>
       issueNumber: z.number().describe('Issue number'),
     }),
     execute: async ({ owner, repo, issueNumber }) => {
-      const { data } = await octokit.issues.get({ owner, repo, issue_number: issueNumber })
+      const { data } = await octokit.rest.issues.get({ owner, repo, issue_number: issueNumber })
       return {
         number: data.number,
         title: data.title,
@@ -75,7 +75,7 @@ export const createIssue = (octokit: Octokit, { needsApproval = true }: ToolOpti
       assignees: z.array(z.string()).optional().describe('GitHub usernames to assign to the issue'),
     }),
     execute: async ({ owner, repo, title, body, labels, assignees }) => {
-      const { data } = await octokit.issues.create({ owner, repo, title, body, labels, assignees })
+      const { data } = await octokit.rest.issues.create({ owner, repo, title, body, labels, assignees })
       return {
         number: data.number,
         title: data.title,
@@ -97,7 +97,7 @@ export const addIssueComment = (octokit: Octokit, { needsApproval = true }: Tool
       body: z.string().describe('Comment text (supports Markdown)'),
     }),
     execute: async ({ owner, repo, issueNumber, body }) => {
-      const { data } = await octokit.issues.createComment({ owner, repo, issue_number: issueNumber, body })
+      const { data } = await octokit.rest.issues.createComment({ owner, repo, issue_number: issueNumber, body })
       return {
         id: data.id,
         url: data.html_url,
@@ -119,7 +119,7 @@ export const closeIssue = (octokit: Octokit, { needsApproval = true }: ToolOptio
       stateReason: z.enum(['completed', 'not_planned']).optional().default('completed').describe('Reason for closing'),
     }),
     execute: async ({ owner, repo, issueNumber, stateReason }) => {
-      const { data } = await octokit.issues.update({
+      const { data } = await octokit.rest.issues.update({
         owner,
         repo,
         issue_number: issueNumber,
