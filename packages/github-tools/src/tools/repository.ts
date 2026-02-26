@@ -74,6 +74,111 @@ export const getFileContent = (octokit: Octokit) =>
     },
   })
 
+export const createBranch = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Create a new branch in a GitHub repository from an existing branch or commit SHA',
+    needsApproval,
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner'),
+      repo: z.string().describe('Repository name'),
+      branch: z.string().describe('Name for the new branch'),
+      from: z.string().optional().describe('Source branch name or commit SHA to branch from (defaults to the default branch)'),
+    }),
+    execute: async ({ owner, repo, branch, from }) => {
+      let sha = from
+      if (!sha || !sha.match(/^[0-9a-f]{40}$/i)) {
+        const { data: ref } = await octokit.rest.git.getRef({
+          owner,
+          repo,
+          ref: `heads/${from || (await octokit.rest.repos.get({ owner, repo })).data.default_branch}`,
+        })
+        sha = ref.object.sha
+      }
+      const { data } = await octokit.rest.git.createRef({
+        owner,
+        repo,
+        ref: `refs/heads/${branch}`,
+        sha,
+      })
+      return {
+        ref: data.ref,
+        sha: data.object.sha,
+        url: data.url,
+      }
+    },
+  })
+
+export const forkRepository = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Fork a GitHub repository to the authenticated user account or a specified organization',
+    needsApproval,
+    inputSchema: z.object({
+      owner: z.string().describe('Repository owner to fork from'),
+      repo: z.string().describe('Repository name to fork'),
+      organization: z.string().optional().describe('Organization to fork into (omit to fork to your personal account)'),
+      name: z.string().optional().describe('Name for the forked repository (defaults to the original name)'),
+    }),
+    execute: async ({ owner, repo, organization, name }) => {
+      const { data } = await octokit.rest.repos.createFork({
+        owner,
+        repo,
+        organization,
+        name,
+      })
+      return {
+        name: data.name,
+        fullName: data.full_name,
+        url: data.html_url,
+        cloneUrl: data.clone_url,
+        sshUrl: data.ssh_url,
+        defaultBranch: data.default_branch,
+        private: data.private,
+        parent: data.parent ? { fullName: data.parent.full_name, url: data.parent.html_url } : null,
+      }
+    },
+  })
+
+export const createRepository = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
+  tool({
+    description: 'Create a new GitHub repository for the authenticated user or a specified organization',
+    needsApproval,
+    inputSchema: z.object({
+      name: z.string().describe('Repository name'),
+      description: z.string().optional().describe('A short description of the repository'),
+      isPrivate: z.boolean().optional().default(false).describe('Whether the repository is private'),
+      autoInit: z.boolean().optional().default(false).describe('Create an initial commit with a README'),
+      gitignoreTemplate: z.string().optional().describe('Gitignore template to use (e.g. "Node", "Python")'),
+      licenseTemplate: z.string().optional().describe('License keyword (e.g. "mit", "apache-2.0")'),
+      org: z.string().optional().describe('Organization to create the repository in (omit for personal repo)'),
+    }),
+    execute: async ({ name, description, isPrivate, autoInit, gitignoreTemplate, licenseTemplate, org }) => {
+      const params = {
+        name,
+        description,
+        private: isPrivate,
+        auto_init: autoInit,
+        gitignore_template: gitignoreTemplate,
+        license_template: licenseTemplate,
+      }
+
+      const { data } = org
+        ? await octokit.rest.repos.createInOrg({ org, ...params })
+        : await octokit.rest.repos.createForAuthenticatedUser(params)
+
+      return {
+        name: data.name,
+        fullName: data.full_name,
+        description: data.description,
+        url: data.html_url,
+        cloneUrl: data.clone_url,
+        sshUrl: data.ssh_url,
+        defaultBranch: data.default_branch,
+        private: data.private,
+        createdAt: data.created_at,
+      }
+    },
+  })
+
 export const createOrUpdateFile = (octokit: Octokit, { needsApproval = true }: ToolOptions = {}) =>
   tool({
     description: 'Create or update a file in a GitHub repository. Provide the SHA when updating an existing file.',
