@@ -1,11 +1,14 @@
 import { createOctokit } from './client'
-import { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository'
+import { getRepository, listBranches, getFileContent, createBranch, forkRepository, createRepository, createOrUpdateFile } from './tools/repository'
 import { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests'
 import { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues'
 import { searchCode, searchRepositories } from './tools/search'
 import { listCommits, getCommit } from './tools/commits'
 
 export type GithubWriteToolName =
+  | 'createBranch'
+  | 'forkRepository'
+  | 'createRepository'
   | 'createOrUpdateFile'
   | 'createPullRequest'
   | 'mergePullRequest'
@@ -60,7 +63,7 @@ const PRESET_TOOLS: Record<GithubToolPreset, string[]> = {
     'searchCode', 'searchRepositories'
   ],
   'maintainer': [
-    'getRepository', 'listBranches', 'getFileContent', 'createOrUpdateFile',
+    'getRepository', 'listBranches', 'getFileContent', 'createBranch', 'forkRepository', 'createRepository', 'createOrUpdateFile',
     'listPullRequests', 'getPullRequest', 'createPullRequest', 'mergePullRequest', 'addPullRequestComment',
     'listIssues', 'getIssue', 'createIssue', 'addIssueComment', 'closeIssue',
     'listCommits', 'getCommit',
@@ -157,6 +160,9 @@ export function createGithubTools({ token, requireApproval = true, preset }: Git
     searchRepositories: searchRepositories(octokit),
     listCommits: listCommits(octokit),
     getCommit: getCommit(octokit),
+    createBranch: createBranch(octokit, approval('createBranch')),
+    forkRepository: forkRepository(octokit, approval('forkRepository')),
+    createRepository: createRepository(octokit, approval('createRepository')),
     createOrUpdateFile: createOrUpdateFile(octokit, approval('createOrUpdateFile')),
     createPullRequest: createPullRequest(octokit, approval('createPullRequest')),
     mergePullRequest: mergePullRequest(octokit, approval('mergePullRequest')),
@@ -177,7 +183,7 @@ export type GithubTools = ReturnType<typeof createGithubTools>
 
 // Re-export individual tool factories for cherry-picking
 export { createOctokit } from './client'
-export { getRepository, listBranches, getFileContent, createOrUpdateFile } from './tools/repository'
+export { getRepository, listBranches, getFileContent, createBranch, forkRepository, createRepository, createOrUpdateFile } from './tools/repository'
 export { listPullRequests, getPullRequest, createPullRequest, mergePullRequest, addPullRequestComment } from './tools/pull-requests'
 export { listIssues, getIssue, createIssue, addIssueComment, closeIssue } from './tools/issues'
 export { searchCode, searchRepositories } from './tools/search'
